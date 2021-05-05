@@ -1,0 +1,30 @@
+{
+  "name": "slutprojekt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azebkidanemariam/slutprojekt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/azebkidanemariam/slutprojekt/issues"
+  },
+  "homepage": "https://github.com/azebkidanemariam/slutprojekt#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.6.2",
+    "uuid": "^8.3.2"
+  }
+}
