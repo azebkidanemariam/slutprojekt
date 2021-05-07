@@ -3,7 +3,8 @@ class BasicError extends Error {}
 class InvalidBody extends BasicError {
   constructor(fields) {
     super();
-    this.message = 'Invalid Body, required fields: ${this.fields.join(", ")} ';
+    this.fields = fields;
+    this.message = `Invalid body, required fields: ${this.fields.join(", ")}`;
     this.errorCode = 400;
   }
 }
