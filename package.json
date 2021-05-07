@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/azebkidanemariam/slutprojekt#readme",
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^9.0.0",
     "express": "^4.17.1",
