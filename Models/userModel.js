@@ -4,6 +4,7 @@ const { DataTypes } = require("sequelize");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { NotValid } = require("../Errors");
 
 const User = db.define("User", {
   email: {
@@ -28,9 +29,11 @@ const User = db.define("User", {
     defaultValue: "worker",
   },
 });
+
 User.beforeCreate((user, options) => {
   user.password = bcrypt.hashSync(user.password, 10);
 });
+
 User.validateToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET, { expiresIn: "1w" });
@@ -42,5 +45,23 @@ User.validateToken = (token) => {
     }
   }
 };
+
+//Added authenticate
+User.authenticate = async (email, password) => {
+  const user = await User.findOne({where: {email}});
+  if(!user) {
+    throw new NotValid()
+  }
+
+  const passwordMatch = bcrypt.compareSync(password, user.password);
+  if (passwordMatch) {
+    const payload = {id: user.id, name: user.name, email: user.email, role: user.role }//Added user role
+    return jwt.sign(payload, process.env.JWT_SECRET);
+  } else {
+    throw new NotValid()
+  }
+};
+
+
 
 module.exports = User;
