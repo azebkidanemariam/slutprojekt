@@ -35,10 +35,10 @@ module.exports = {
       if (name) fields.name = name
       if (email) fields.email = email
 
-      const user = await User.findOne({where: {id}})
+      const user = await User.findOne({ where: { id } })
       console.log(user);
 
-      await User.update(fields, { where: {id} })
+      await User.update(fields, { where: { id } })
       res.json({ message: "User info updated" })
     } catch (error) {
       next(error)
@@ -54,12 +54,33 @@ module.exports = {
   //added get one user
   async getOneUser(req, res, next) {
     // const { id } = req.params;
-    const id = req.body
+    const id = req.body.id//Fixed
+    console.log(id);
     const user = await User.findOne({ where: { id } });
+    console.log(user);
     if (!user) {
       throw new UserNotFound()
     }
     res.json({ user })
+  },
+
+  //Admin functions
+  async registerUser(req, res, next) {
+    try {
+      const { email, name, password } = req.body;
+      console.log(req.body);
+
+      if (!email || !name || !password) {
+        throw new InvalidBody(["email", "name", "password"]);
+      }
+
+      const user = await User.create({ email, name, password });
+      res.json({ message: "User registered" })
+    } catch (error) {
+      next(error)
+    }
   }
+
+
 
 };
