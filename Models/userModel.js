@@ -2,9 +2,12 @@ const db = require("../Database/connection");
 
 const { DataTypes } = require("sequelize");
 
+const Task = require("../Models/taskModel")
+// const Message = require("../Models/messageModel")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { NotValid } = require("../Errors");
+const Message = require("./messageModel");
 
 const User = db.define("User", {
   email: {
@@ -61,6 +64,26 @@ User.authenticate = async (email, password) => {
     throw new NotValid()
   }
 };
+
+// User.hasMany(Message)
+// Message.belongsTo(User)
+// User.hasMany(Task)
+// Task.belongsTo(User)
+
+User.belongsTo(Message, {through: Task});
+Message.belongsToMany(User, {through: Task})
+// Message.belongsTo(Task)
+
+/*
+hasOne
+belongsTo
+hasMany
+belongsToMany
+*/
+
+
+// Project.belongsToMany(User, {through: 'UserProject'}); 
+// User.belongsToMany(Project, {through: 'UserProject'});
 
 
 
