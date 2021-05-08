@@ -2,7 +2,7 @@ const db = require("../Database/connection");
 
 const { DataTypes } = require("sequelize");
 
-const Task = require("../Models/taskModel")
+const Task = require("../Models/taskModel");
 // const Message = require("../Models/messageModel")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -51,17 +51,22 @@ User.validateToken = (token) => {
 
 //Added authenticate
 User.authenticate = async (email, password) => {
-  const user = await User.findOne({where: {email}});
-  if(!user) {
-    throw new NotValid()
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw new NotValid();
   }
 
   const passwordMatch = bcrypt.compareSync(password, user.password);
   if (passwordMatch) {
-    const payload = {id: user.id, name: user.name, email: user.email, role: user.role }//Added user role
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    }; //Added user role
     return jwt.sign(payload, process.env.JWT_SECRET);
   } else {
-    throw new NotValid()
+    throw new NotValid();
   }
 };
 
@@ -70,8 +75,8 @@ User.authenticate = async (email, password) => {
 // User.hasMany(Task)
 // Task.belongsTo(User)
 
-User.belongsTo(Message, {through: Task});
-Message.belongsToMany(User, {through: Task})
+// User.belongsTo(Message, { through: Task });
+// Message.belongsToMany(User, { through: Task });
 // Message.belongsTo(Task)
 
 /*
@@ -81,10 +86,7 @@ hasMany
 belongsToMany
 */
 
-
-// Project.belongsToMany(User, {through: 'UserProject'}); 
+// Project.belongsToMany(User, {through: 'UserProject'});
 // User.belongsToMany(Project, {through: 'UserProject'});
-
-
 
 module.exports = User;
