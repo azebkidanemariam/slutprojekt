@@ -17,4 +17,8 @@ router.post("/users", Auth.admin, UserController.register);
 router.patch("/users/:id", Auth.admin, UserController.updateUser);
 router.delete("/users/:id", Auth.admin, UserController.deleteUser);
 
+
+//Worker endpoints
+router.post("/tasks", Auth.user, UserController.createTask);
+
 module.exports = router;
