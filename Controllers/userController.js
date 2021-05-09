@@ -2,7 +2,6 @@ const { InvalidBody, UserNotFound } = require("../Errors");
 const User = require("../Models/userModel");
 
 module.exports = {
-  
   //added login
   async login(req, res, next) {
     try {
@@ -13,31 +12,31 @@ module.exports = {
       next(error);
     }
   },
-  
+
   //can be updated further with password change
   async updateUserProfile(req, res, next) {
     try {
-      const id = req.user.id
-      const { name, email } = req.body
-      const fields = {}
-      if (name) fields.name = name
-      if (email) fields.email = email
-      
-      const user = await User.findOne({ where: { id } })
+      const id = req.user.id;
+      const { name, email } = req.body;
+      const fields = {};
+      if (name) fields.name = name;
+      if (email) fields.email = email;
+
+      const user = await User.findOne({ where: { id } });
       console.log(user);
-      
-      await User.update(fields, { where: { id } })
-      res.json({ message: "User info updated" })
+
+      await User.update(fields, { where: { id } });
+      res.json({ message: "User info updated" });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-  
+
   me(req, res, next) {
-    const user = req.user
-    res.json({ user })
+    const user = req.user;
+    res.json({ user });
   },
-  
+
   async getOneUser(req, res, next) {
     const { id } = req.params;
     // const id = req.body.id
@@ -45,9 +44,25 @@ module.exports = {
     const user = await User.findOne({ where: { id } });
     console.log(user);
     if (!user) {
-      throw new UserNotFound()
+      throw new UserNotFound();
     }
-    res.json({ user })
+    res.json({ user });
+  },
+
+  async getUserByName(req, res, next) {
+    try {
+      const { name } = req.query;
+      if (!name) {
+        throw new InvalidBody(["name"]);
+      }
+      const user = await User.findAll({
+        where: { name: name },
+        attributes: { exclude: ["password", "id", "createdAt", "updatedAt"] },
+      });
+      res.json({ user });
+    } catch (error) {
+      next(error);
+    }
   },
 
   //Admin endpoints
@@ -66,44 +81,52 @@ module.exports = {
   },
 
   async updateUser(req, res, next) {
-    try{
-      const {id} = req.params;
-      const {email, name, role} = req.body
-      const fields = {}
-      if(email) fields.email = email
-      if(name) fields.name = name
-      if(role) fields.role = role
+    try {
+      const { id } = req.params;
+      const { email, name, role } = req.body;
+      const fields = {};
+      if (email) fields.email = email;
+      if (name) fields.name = name;
+      if (role) fields.role = role;
 
-      const user = await User.findOne({ where: { id } })
-      if(!user) {
-        throw new UserNotFound()
+      const user = await User.findOne({ where: { id } });
+      if (!user) {
+        throw new UserNotFound();
       }
-      await User.update(fields, {where: {id}})
-      res.json({message: "User updated" }) 
-
-    }catch(error) {
-      next(error)
+      await User.update(fields, { where: { id } });
+      res.json({ message: "User updated" });
+    } catch (error) {
+      next(error);
     }
   },
-  
+
   async deleteUser(req, res, next) {
-    try{
-      const {id} = req.params;
-      const user = await User.findOne({where: {id}})
-      
+    try {
+      const { id } = req.params;
+      const user = await User.findOne({ where: { id } });
+
       console.log(user);
       await user.destroy();
-      res.json({message: "Wasted!"})
-
-    }catch(error) {
-      next(error)
+      res.json({ message: "Wasted!" });
+    } catch (error) {
+      next(error);
     }
   },
-  
-
-
-
-  
-  
-  
 };
+
+// async getUserByName(req, res, next) {
+//   try {
+//     const { page } = req.params;
+//     const { name } = req.query;
+//     if (page && !name) {
+//       let user = await User.findAll({ limit: 5, offset: (page - 1) * 5 });
+//       res.json(user);
+//     } else if (page && name) {
+//       let user = await User.findAll({ where: { name: name } });
+//       res.json(user);
+//     }
+//   } catch (error) {
+//     // res.json(message);
+//     next(error);
+//   }
+// },

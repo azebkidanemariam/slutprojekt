@@ -70,8 +70,8 @@ User.authenticate = async (email, password) => {
 // User.hasMany(Task)
 // Task.belongsTo(User)
 
-User.belongsToMany(Message, { through: Task });
-Message.belongsToMany(User, { through: Task });
+User.belongsToMany(Message, { through: Task });// på detta sätt får tasks 2 keys 
+Message.belongsToMany(User, { through: Task });// på detta sätt får tasks 2 keys 
 // Message.belongsTo(Task)
 
 /*
