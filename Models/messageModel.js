@@ -1,22 +1,48 @@
-const db = require("../Database/connection")
+const db = require("../Database/connection");
 
-const {DataTypes} = require("sequelize")
+const { DataTypes } = require("sequelize");
 
-const Task = require("../Models/taskModel")
-const User = require("../Models/userModel")
+const Task = require("../Models/taskModel");
+const User = require("../Models/userModel");
+const { models } = require("../Database/connection");
 
 const Message = db.define("Message", {
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false, 
+  Message_id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  content: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  Task_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: false,
+    references: {
+      model: "Tasks",// s added
+      key: "Task_id",
     },
-    content: {
-        type: DataTypes.STRING,
-        allowNull: false, 
+    onDelete: "cascade",
+    onUpdate: "cascade",
+    unique: "unique-task-per-user",
+  },
+});
+Message.associate = (models) => {
+  Message.belongsTo(Task, {
+    foreignKey: "Task_id",
+    targetKey: "Task_id",
+    as: "Task",
+  });
 
-    }
-})
-
-
-module.exports = Message
-
+  Message.belongsToMany(User, {
+    as: "User",
+    through: Task,
+    foreignKey: "Message_id",
+  });
+};
+module.exports = Message;
