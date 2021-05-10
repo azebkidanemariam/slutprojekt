@@ -1,6 +1,5 @@
 const { InvalidBody, UserNotFound } = require("../Errors");
 const User = require("../Models/userModel");
-const Task = require("../Models/taskModel");
 
 module.exports = {
   //added login
@@ -109,22 +108,6 @@ module.exports = {
       console.log(user);
       await user.destroy();
       res.json({ message: "Wasted!" });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-
-
-
-  async createTask(req, res, next) {
-    try {
-      const { done } = req.body;
-      if (!done) {
-        throw new InvalidBody(["done"]);
-      }
-      await Task.create({ done });
-      res.json({ message: "Task registered" });
     } catch (error) {
       next(error);
     }
