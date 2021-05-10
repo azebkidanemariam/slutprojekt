@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const userController = require("../Controllers/userController");
 const taskController = require("../Controllers/taskController");
+const messageController = require("../Controllers/messageController");
 const router = new Router();
 const Auth = require("../Middlewares/auth");
 
@@ -19,5 +20,6 @@ router.delete("/users/:id", Auth.admin, userController.deleteUser);
 
 //Worker endpoints
 router.post("/tasks", Auth.worker, taskController.createTask);
+router.post("/tasks/:id/messages", Auth.worker, messageController.createMessage);
 
 module.exports = router;
