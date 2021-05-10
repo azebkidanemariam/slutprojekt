@@ -117,33 +117,4 @@ module.exports = {
 
 
 
-  async createTask(req, res, next) {
-    try {
-      const { done } = req.body;
-      if (!done) {
-        throw new InvalidBody(["done"]);
-      }
-      await Task.create({ done });
-      res.json({ message: "Task registered" });
-    } catch (error) {
-      next(error);
-    }
-  },
-};
-
-// async getUserByName(req, res, next) {
-//   try {
-//     const { page } = req.params;
-//     const { name } = req.query;
-//     if (page && !name) {
-//       let user = await User.findAll({ limit: 5, offset: (page - 1) * 5 });
-//       res.json(user);
-//     } else if (page && name) {
-//       let user = await User.findAll({ where: { name: name } });
-//       res.json(user);
-//     }
-//   } catch (error) {
-//     // res.json(message);
-//     next(error);
-//   }
-// },
+}

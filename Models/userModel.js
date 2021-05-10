@@ -2,21 +2,15 @@ const db = require("../Database/connection");
 
 const { DataTypes } = require("sequelize");
 
-// const Task = require("../Models/taskModel")
-// const Message = require("../Models/messageModel")
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { NotValid } = require("../Errors");
 const Message = require("./messageModel");
 const Task = require("./taskModel");
-// const Message = require("./messageModel");
+
 
 const User = db.define("User", {
-  User_id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -76,11 +70,8 @@ User.authenticate = async (email, password) => {
     throw new NotValid();
   }
 };
-User.associate = (models) => {
-  User.belongsToMany(Message, {
-    as: "Message",
-    through: Task,
-    foreignKey: "User_id",
-  });
-};
+User.belongsToMany(Task, { through: Message });
+Task.belongsToMany(User, { through: Message });
+Task.belongsTo(User, { through: Task });
+
 module.exports = User;

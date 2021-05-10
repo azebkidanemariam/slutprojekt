@@ -20,6 +20,8 @@ router.delete("/users/:id", Auth.admin, userController.deleteUser);
 
 //Worker endpoints
 router.post("/tasks", Auth.worker, taskController.createTask);
+router.get("/tasks", Auth.worker, taskController.getTaskByReciverId);http://localhost:5000/tasks?reciverId=5
 router.post("/tasks/:id/messages", Auth.worker, messageController.createMessage);
+
 
 module.exports = router;
