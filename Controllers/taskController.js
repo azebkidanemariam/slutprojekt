@@ -3,6 +3,7 @@ const Message = require("../Models/messageModel");
 const User = require("../Models/userModel");
 
 const { InvalidBody, UserNotFound } = require("../Errors");
+const { user, client } = require("../Middlewares/auth");
 
 module.exports = {
   async createTask(req, res, next) {
@@ -27,20 +28,37 @@ module.exports = {
       next(error);
     }
   },
-  async getTaskByReciverId(req, res, next) {
+  async getTaskById(req, res, next) {
     try {
-      const { reciverId } = req.query;
-      if (!reciverId) {
-        throw new InvalidBody(["reciverId"]);
+      const { id } = req.query;
+
+      if (!id) {
+        throw new NotValid(["id"]);
       }
 
       const task = await Task.findAll({
-        where: { reciverId: reciverId },
-        // attributes: { exclude: ["password", "id", "createdAt", "updatedAt"] },
+        where: { id: id },
+      });
+
+      res.json({ task });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getClientTasks(req, res, next) {
+    try {
+      const page = +req.params.page || 0;
+      const clientID = req.user.id;
+      console.log(req.user);
+      const task = await Task.findAll({
+        limit: 10,
+        offset: (page - 1) * 10,
+        where: { clientID },
       });
       res.json({ task });
     } catch (error) {
       next(error);
     }
   },
-};
+}
