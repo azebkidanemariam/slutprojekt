@@ -2,12 +2,13 @@ const db = require("../Database/connection");
 
 const { DataTypes } = require("sequelize");
 
-const Task = require("../Models/taskModel")
-// const Message = require("../Models/messageModel")
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { NotValid } = require("../Errors");
 const Message = require("./messageModel");
+const Task = require("./taskModel");
+
 
 const User = db.define("User", {
   email: {
@@ -51,27 +52,26 @@ User.validateToken = (token) => {
 
 //Added authenticate
 User.authenticate = async (email, password) => {
-  const user = await User.findOne({where: {email}});
-  if(!user) {
-    throw new NotValid()
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw new NotValid();
   }
 
   const passwordMatch = bcrypt.compareSync(password, user.password);
   if (passwordMatch) {
-    const payload = {id: user.id, name: user.name, email: user.email, role: user.role }//Added user role
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    }; //Added user role
     return jwt.sign(payload, process.env.JWT_SECRET);
   } else {
-    throw new NotValid()
+    throw new NotValid();
   }
 };
-
-
-
-User.belongsToMany(Message, { through: Task });// på detta sätt får tasks 2 keys 
-Message.belongsToMany(User, { through: Task });// på detta sätt får tasks 2 keys 
-
-
-
-
+User.belongsToMany(Task, { through: Message });
+Task.belongsToMany(User, { through: Message });
+Task.belongsTo(User, { through: Task });
 
 module.exports = User;

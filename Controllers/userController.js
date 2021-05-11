@@ -1,5 +1,6 @@
 const { InvalidBody, UserNotFound } = require("../Errors");
 const User = require("../Models/userModel");
+const Task = require("../Models/taskModel");
 
 module.exports = {
   //added login
@@ -112,21 +113,8 @@ module.exports = {
       next(error);
     }
   },
-};
 
-// async getUserByName(req, res, next) {
-//   try {
-//     const { page } = req.params;
-//     const { name } = req.query;
-//     if (page && !name) {
-//       let user = await User.findAll({ limit: 5, offset: (page - 1) * 5 });
-//       res.json(user);
-//     } else if (page && name) {
-//       let user = await User.findAll({ where: { name: name } });
-//       res.json(user);
-//     }
-//   } catch (error) {
-//     // res.json(message);
-//     next(error);
-//   }
-// },
+
+
+
+}

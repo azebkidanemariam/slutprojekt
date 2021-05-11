@@ -1,29 +1,30 @@
-const db = require("../Database/connection")
+const db = require("../Database/connection");
 
-const {DataTypes} = require("sequelize")
-const Message = require("../Models/messageModel")
-const User = require("../Models/userModel")
+const { DataTypes } = require("sequelize");
+const Message = require("../Models/messageModel");
+const User = require("../Models/userModel");
+const { models } = require("../Database/connection");
 
-const Task = db.define("Task", { //!vi lägger till ett id som primary key då blir de andra tabellerna foreign keys.
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-      },
-    done: {
-        type: DataTypes.STRING,
-        allowNull: false, 
-    },
-    pic: {
-        type: DataTypes.STRING,
-        allowNull: true, 
-    }
+const Task = db.define("Task", {
+  //!vi lägger till ett id som primary key då blir de andra tabellerna foreign keys.
 
-})
+  title: {
+    type: DataTypes.STRING,
+    defaultValue: "Untitled task",
+  },
 
+  pic: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  done: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  reciverId: {
+      type: DataTypes.INTEGER,
+      foreignKey: true,
+  }
+});
 
-// User.hasMany(Task) 
-// User.hasMany(Task)
-// Task.belongsTo(User)
-// Message.belongsTo(Task)
-module.exports = Task
+module.exports = Task;
