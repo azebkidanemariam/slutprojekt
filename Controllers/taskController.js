@@ -7,7 +7,7 @@ const { InvalidBody, UserNotFound } = require("../Errors");
 module.exports = {
   async createTask(req, res, next) {
     try {
-      const UserId = req.user.id;
+      const workerID = req.user.id;
       const { done, title, email } = req.body;
       if (!done || !title || !email) {
         throw new InvalidBody(["done", "title"]);
@@ -19,8 +19,8 @@ module.exports = {
       await Task.create({
         done,
         title,
-        UserId,
-        reciverId: client.id,
+        workerID,
+        clientID: client.id,
       });
       res.json({ message: "Task registered" });
     } catch (error) {

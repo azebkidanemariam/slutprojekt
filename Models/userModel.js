@@ -6,6 +6,7 @@ const { DataTypes } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { NotValid } = require("../Errors");
+const { NotAuthorized } = require("../Errors");
 const Message = require("./messageModel");
 const Task = require("./taskModel");
 
@@ -70,8 +71,9 @@ User.authenticate = async (email, password) => {
     throw new NotValid();
   }
 };
-User.belongsToMany(Task, { through: Message });
-Task.belongsToMany(User, { through: Message });
-Task.belongsTo(User, { through: Task });
+User.hasMany(Task, { foreignKey: "clientID" });//task får foreign keyn: clientID i tabellen
+User.hasMany(Task, { foreignKey: "workerID" });//task får också en till foreign key som heter workerID i tabellen
+Task.hasMany(Message,{foreignKey: "taskID"});//message får en taskID som foreign key i tabellen
+
 
 module.exports = User;

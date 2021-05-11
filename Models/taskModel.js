@@ -21,10 +21,7 @@ const Task = db.define("Task", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  reciverId: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-  }
+  
 });
 
 module.exports = Task;

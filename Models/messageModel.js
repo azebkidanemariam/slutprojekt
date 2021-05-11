@@ -7,6 +7,11 @@ const User = require("../Models/userModel");
 const { models } = require("../Database/connection");
 
 const Message = db.define("Message", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+  },
+
   title: {
     type: DataTypes.STRING,
     allowNull: false,
