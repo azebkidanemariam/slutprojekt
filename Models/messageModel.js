@@ -9,7 +9,7 @@ const { models } = require("../Database/connection");
 const Message = db.define("Message", {
   id: {
     type: DataTypes.INTEGER,
-    primaryKey: true
+    primaryKey: true,
   },
 
   title: {
