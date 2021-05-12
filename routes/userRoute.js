@@ -15,13 +15,15 @@ router.get("/users/:id", Auth.user, userController.getOneUser);
 router.post("/users", userController.register);
 router.patch("/users/:id", Auth.admin, userController.updateUser);
 router.delete("/users/:id", Auth.admin, userController.deleteUser);
+router.delete("/tasks/:id", Auth.admin, taskController.deleteTaskById);
 
 //Worker endpoints
 router.post("/tasks", Auth.worker, taskController.createTask);
 router.get("/tasks", Auth.worker, taskController.getTaskById); //(http://localhost:5000/tasks?reciverId=5() Hämtar ett ärende
 router.post("/tasks/:id/messages", Auth.user, messageController.createMessage);
-
+router.patch("/tasks/:id", Auth.worker, taskController.updateTaskById);
 //client endpoints
+router.delete("/messages/:id", Auth.client, messageController.deleteMessageById);//Ska även funka för worker
 
 router.get("/gettasks", Auth.client, taskController.getClientTasks); //Hämtar kundens ärenden
 
