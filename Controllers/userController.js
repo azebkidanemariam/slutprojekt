@@ -106,7 +106,6 @@ module.exports = {
       const { id } = req.params;
       const user = await User.findOne({ where: { id } });
 
-      console.log(user);
       await user.destroy();
       res.json({ message: "Wasted!" });
     } catch (error) {

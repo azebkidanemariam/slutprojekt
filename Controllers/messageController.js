@@ -17,4 +17,17 @@ module.exports = {
       next(error);
     }
   },
+
+  async deleteMessageById(req, res, next) {
+    try{
+      const {id} = req.params
+
+      const message = await Message.findByPk(id)
+      await message.destroy()
+      res.json({message: "Message wasted!"})
+
+    } catch(error) {
+      next(error);
+    }
+  }
 };
