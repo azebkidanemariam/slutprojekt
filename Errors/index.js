@@ -1,4 +1,4 @@
-class BasicError extends Error {}
+class BasicError extends Error { }
 
 class InvalidBody extends BasicError {
   constructor(fields) {
@@ -42,11 +42,20 @@ class UserNotFound extends BasicError {
 }
 
 class TaskNotFound extends BasicError {
-  constructor(){
+  constructor() {
     super();
-    this.message = `Task with id ${id} not found`;
+    this.message = `Task not found`;
     this.errorCode = 404
   }
+}
+
+class MessageNotFound extends BasicError {
+  constructor() {
+    super();
+    this.message = `Message not found`;
+    this.errorCode = 404
+  }
+
 }
 
 module.exports = {
@@ -56,5 +65,6 @@ module.exports = {
   NotAuthorized,
   TokenExpired,
   UserNotFound,
-  TaskNotFound
+  TaskNotFound,
+  MessageNotFound
 };

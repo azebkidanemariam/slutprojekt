@@ -13,6 +13,9 @@ module.exports = {
     const {id} = req.params
 
     const task = await Task.findByPk(id)
+    if(!task){
+      throw new TaskNotFound()
+    }
     await task.destroy()
     res.json({message: "Task wasted!"})
     } catch(error) {

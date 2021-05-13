@@ -25,7 +25,8 @@ router.patch("/tasks/:id", Auth.worker, taskController.updateTaskById);
 
 
 //client endpoints
-router.delete("/tasks/:id/messages/:msgId", Auth.user, messageController.deleteMessageById); //this can be improved with user role
+router.delete("/messages/:id", Auth.user, messageController.deleteMessageById); //this can be improved with user role
 router.get("/temptasks", Auth.client, taskController.getClientTasks); //Hämtar kundens ärenden
+router.get("/tasks/:id/messages", Auth.client, messageController.getClientTaskMessages)
 
 module.exports = router;

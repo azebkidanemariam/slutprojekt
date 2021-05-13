@@ -1,4 +1,4 @@
-const { InvalidBody, UserNotFound } = require("../Errors");
+const { InvalidBody, UserNotFound, MessageNotFound } = require("../Errors");
 // const Task = require("../Models/taskModel")
 const Message = require("../Models/messageModel");
 const Task = require("../Models/taskModel");
@@ -15,7 +15,7 @@ module.exports = {
       if (!title || !content) {
         throw new InvalidBody(["title", "content"]);
       }
-      const user = await User.findOne({where: {id:authorID}})
+      const user = await User.findOne({ where: { id: authorID } })
       await Message.create({ title, content, authorID, taskID });
       res.json({ message: "Message created" });
     } catch (error) {
@@ -23,16 +23,32 @@ module.exports = {
     }
   },
 
+  //Error handler with string temp lit doesn't work?
   async deleteMessageById(req, res, next) {
     try {
-      const { msgId, id } = req.params;
+      const { id } = req.params;
+      const authorID = req.user.id
 
-      const message = await Message.findAll({ where: { taskID: id } });
-      console.log(message);
-     
-      res.json({ message });
+      const message = await Message.findOne({ where: { id } })
+      if(!message){
+        throw new MessageNotFound()
+      }
+      await message.destroy();
+      res.json({message: `Message with id ${id} wasted!`})
+
     } catch (error) {
       next(error);
     }
   },
+
+  async getClientTaskMessages(req, res, next){
+    try {
+      //Code goes here
+    } catch(error) {
+      next(error);
+    }
+  }
+
+
+
 };
