@@ -6,23 +6,22 @@ const { InvalidBody, UserNotFound, TaskNotFound } = require("../Errors");
 const { user, client } = require("../Middlewares/auth");
 
 module.exports = {
-
   //Admin
   async deleteTaskById(req, res, next) {
-    try{
-    const {id} = req.params
+    try {
+      const { id } = req.params;
 
-    const task = await Task.findByPk(id)
-    if(!task){
-      throw new TaskNotFound()
-    }
-    await task.destroy()
-    res.json({message: "Task wasted!"})
-    } catch(error) {
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      await task.destroy();
+      res.json({ message: "Task wasted!" });
+    } catch (error) {
       next(error);
     }
   },
-  
+
   //Worker
   async createTask(req, res, next) {
     try {
@@ -65,36 +64,35 @@ module.exports = {
     }
   },
 
-  async updateTaskById(req, res, next){
-    try{
-      const {id} = req.params 
-      const {title, pic, done} = req.body
-      const fields = {}
-      if(title) fields.title = title
-      if(pic) fields.pic = pic
-      if(done) fields.done = done
+  async updateTaskById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { title, pic, done } = req.body;
+      const fields = {};
+      if (title) fields.title = title;
+      if (pic) fields.pic = pic;
+      if (done) fields.done = done;
 
-      const task = await Task.findByPk(id)
-      if(!task){
-        throw new TaskNotFound()
-      } 
-      await Task.update(fields, {where: {id}})
-      res.json({message: "Task updated!"})
-
-    }catch(error) {
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      await Task.update(fields, { where: { id } });
+      res.json({ message: "Task updated!" });
+    } catch (error) {
       next(error);
     }
   },
 
-//Client 
+  //Client
   async getClientTasks(req, res, next) {
     try {
       const page = +req.params.page || 0;
       const clientID = req.user.id;
       console.log(req.user);
       const task = await Task.findAll({
-        limit: 10,
-        offset: (page - 1) * 10,
+        limit: 2,
+        offset: (page - 1) * 2,
         where: { clientID },
       });
       res.json({ task });
@@ -102,4 +100,4 @@ module.exports = {
       next(error);
     }
   },
-}
+};

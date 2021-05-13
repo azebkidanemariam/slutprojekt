@@ -22,11 +22,12 @@ router.post("/tasks", Auth.worker, taskController.createTask);
 router.get("/tasks", Auth.worker, taskController.getTaskById); //(http://localhost:5000/tasks?reciverId=5() Hämtar ett ärende
 router.post("/tasks/:id/messages", Auth.user, messageController.createMessage);
 router.patch("/tasks/:id", Auth.worker, taskController.updateTaskById);
+router.get("/temptasks/:taskID/messages/:page", Auth.worker, messageController.getWorkerMessages);
 
 
 //client endpoints
 router.delete("/messages/:id", Auth.user, messageController.deleteMessageById); //this can be improved with user role
-router.get("/temptasks", Auth.client, taskController.getClientTasks); //Hämtar kundens ärenden
-router.get("/tasks/:id/messages", Auth.client, messageController.getClientTaskMessages)
+router.get("/temptasks/:page", Auth.client, taskController.getClientTasks); //Hämtar kundens ärenden
+router.get("/tasks/:taskID/messages", Auth.client, messageController.getClientMessages)
 
 module.exports = router;
