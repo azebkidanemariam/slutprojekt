@@ -43,7 +43,8 @@ module.exports = {
   async getClientMessages(req, res, next) {
     try {
       const taskID = req.params;
-      const authorID = req.user.id;
+      const authorID = req.user.id
+      console.log(taskID)
       const messages = await Message.findAll({
         where: { taskID: req.params.taskID },
       });
