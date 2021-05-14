@@ -20,7 +20,8 @@ router.delete("/tasks/:id", Auth.admin, taskController.deleteTaskById);
 //Worker endpoints
 router.post("/tasks", Auth.worker, taskController.createTask);
 router.get("/tasks", Auth.worker, taskController.getTaskById); //(http://localhost:5000/tasks?reciverId=5() Hämtar ett ärende
-router.post("/tasks/:id/messages", Auth.user, messageController.createMessage);
+router.post("/tasks/:id/messages", Auth.user, messageController.createMessage);//specify auth user role
+// router.post("/tasks/:id/messages", Auth.all_users, messageController.createMessage);//new experment
 router.patch("/tasks/:id", Auth.worker, taskController.updateTaskById);
 router.get("/temptasks/:taskID/messages/:page", Auth.worker, messageController.getWorkerMessages);
 

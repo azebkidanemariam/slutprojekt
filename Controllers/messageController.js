@@ -1,5 +1,10 @@
-const { InvalidBody, UserNotFound, MessageNotFound } = require("../Errors");
-const { client } = require("../Middlewares/auth");
+const {
+  InvalidBody,
+  UserNotFound,
+  MessageNotFound,
+  NotAuthorized,
+} = require("../Errors");
+const { client, worker } = require("../Middlewares/auth");
 const Message = require("../Models/messageModel");
 const Task = require("../Models/taskModel");
 const User = require("../Models/userModel");
@@ -22,6 +27,26 @@ module.exports = {
       next(error);
     }
   },
+  // async createMessage(req, res, next) {
+  //   try {
+  //     const authorID = req.user.id;
+  //     const taskID = req.params.id;
+  //     const task = await Task.findOne({ where: { id: authorID } });
+
+  //     const { title, content } = req.body;
+  //     if (!title || !content) {
+  //       throw new InvalidBody(["title", "content"]);
+  //     }
+  //     const user = await User.findOne({ where: { id: authorID } });
+  //     if (req.user.role !== "worker" || req.user.role !== "client") {
+  //       throw new NotAuthorized();
+  //     }
+  //     await Message.create({ title, content, authorID, taskID });
+  //     res.json({ message: "Message created" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
 
   //Error handler with string temp lit doesn't work?
   async deleteMessageById(req, res, next) {
