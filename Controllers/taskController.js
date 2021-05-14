@@ -1,7 +1,9 @@
 const Task = require("../Models/taskModel");
 const Message = require("../Models/messageModel");
 const User = require("../Models/userModel");
-
+const path = require("path");
+const { v4: uuid } = require("uuid");
+const fileupload = require("express-fileupload");
 const { InvalidBody, UserNotFound, TaskNotFound } = require("../Errors");
 const { user, client } = require("../Middlewares/auth");
 
@@ -96,6 +98,30 @@ module.exports = {
         where: { clientID },
       });
       res.json({ task });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async uploadImage(req, res, next) {
+    try {
+      const id = req.params.id;
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      const file = req.files.pic;
+      
+      const extension = path.extname(file.name);
+      const newFileName = uuid() + extension;
+      const outputPath = path.join("uploads", newFileName);
+      file.mv(outputPath);
+      
+      if (task.pic) {
+        path.join("uploads", task.pic);
+      }
+      task.pic = newFileName;
+      await task.save();
+      res.json({ message: "Picture uploaded succesfully" });
     } catch (error) {
       next(error);
     }

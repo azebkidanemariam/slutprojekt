@@ -29,5 +29,5 @@ router.get("/temptasks/:taskID/messages/:page", Auth.worker, messageController.g
 router.delete("/messages/:id", Auth.user, messageController.deleteMessageById); //this can be improved with user role
 router.get("/temptasks/:page", Auth.client, taskController.getClientTasks); //Hämtar kundens ärenden
 router.get("/tasks/:taskID/messages", Auth.client, messageController.getClientMessages)
-
+router.post("/tasks/:id/image", Auth.worker,taskController.uploadImage)
 module.exports = router;

@@ -1,14 +1,16 @@
 const express = require("express");
+const fileUpload = require("express-fileupload");
+const userRoutes = require("./routes/userRoute");
+const db = require("./Database/setup");
 
 require("dotenv").config();
 
 const app = express();
 
-const db = require("./Database/setup");
 
+app.use( fileUpload());
 app.use(express.json());
 
-const userRoutes = require("./routes/userRoute");
 
 app.use("/", userRoutes);
 
