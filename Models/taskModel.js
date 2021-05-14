@@ -6,7 +6,7 @@ const User = require("../Models/userModel");
 const { models } = require("../Database/connection");
 
 const Task = db.define("Task", {
-  //!vi lägger till ett id som primary key då blir de andra tabellerna foreign keys.
+  
 
   title: {
     type: DataTypes.STRING,
