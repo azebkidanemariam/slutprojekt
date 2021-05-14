@@ -1,25 +1,29 @@
 const Task = require("../Models/taskModel");
 const Message = require("../Models/messageModel");
 const User = require("../Models/userModel");
-
+const path = require("path");
+const { v4: uuid } = require("uuid");
+const fileupload = require("express-fileupload");
 const { InvalidBody, UserNotFound, TaskNotFound } = require("../Errors");
 const { user, client } = require("../Middlewares/auth");
 
 module.exports = {
-
   //Admin
   async deleteTaskById(req, res, next) {
-    try{
-    const {id} = req.params
+    try {
+      const { id } = req.params;
 
-    const task = await Task.findByPk(id)
-    await task.destroy()
-    res.json({message: "Task wasted!"})
-    } catch(error) {
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      await task.destroy();
+      res.json({ message: "Task wasted!" });
+    } catch (error) {
       next(error);
     }
   },
-  
+
   //Worker
   async createTask(req, res, next) {
     try {
@@ -62,36 +66,35 @@ module.exports = {
     }
   },
 
-  async updateTaskById(req, res, next){
-    try{
-      const {id} = req.params 
-      const {title, pic, done} = req.body
-      const fields = {}
-      if(title) fields.title = title
-      if(pic) fields.pic = pic
-      if(done) fields.done = done
+  async updateTaskById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { title, pic, done } = req.body;
+      const fields = {};
+      if (title) fields.title = title;
+      if (pic) fields.pic = pic;
+      if (done) fields.done = done;
 
-      const task = await Task.findByPk(id)
-      if(!task){
-        throw new TaskNotFound()
-      } 
-      await Task.update(fields, {where: {id}})
-      res.json({message: "Task updated!"})
-
-    }catch(error) {
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      await Task.update(fields, { where: { id } });
+      res.json({ message: "Task updated!" });
+    } catch (error) {
       next(error);
     }
   },
 
-//Client 
+  //Client
   async getClientTasks(req, res, next) {
     try {
       const page = +req.params.page || 0;
       const clientID = req.user.id;
       console.log(req.user);
       const task = await Task.findAll({
-        limit: 10,
-        offset: (page - 1) * 10,
+        limit: 2,
+        offset: (page - 1) * 2,
         where: { clientID },
       });
       res.json({ task });
@@ -99,4 +102,28 @@ module.exports = {
       next(error);
     }
   },
-}
+  async uploadImage(req, res, next) {
+    try {
+      const id = req.params.id;
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound();
+      }
+      const file = req.files.pic;
+      
+      const extension = path.extname(file.name);
+      const newFileName = uuid() + extension;
+      const outputPath = path.join("uploads", newFileName);
+      file.mv(outputPath);
+      
+      if (task.pic) {
+        path.join("uploads", task.pic);
+      }
+      task.pic = newFileName;
+      await task.save();
+      res.json({ message: "Picture uploaded succesfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
+};
