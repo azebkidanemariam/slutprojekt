@@ -51,4 +51,17 @@ module.exports = {
     req.user = user;
     next();
   },
+  // all_users: (req, res, next) => {
+  //   const token = extractToken(req.headers);
+  //   const user = User.validateToken(token);
+  //   if (
+  //     user.role !== "client" &&
+  //     user.role !== "worker" &&
+  //     user.role !== "admin"
+  //   ) {
+  //     throw new NotAuthorized();
+  //   }
+  //   req.user = user;
+  //   next();
+  // },
 };
