@@ -22,7 +22,9 @@ module.exports = {
       }
       const user = await User.findOne({ where: { id: authorID } });
       await Message.create({ title, content, authorID, taskID });
-      res.json({ message: "Message created" });
+      res.json({
+        message: `Message created succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -55,44 +57,75 @@ module.exports = {
       const authorID = req.user.id;
 
       const message = await Message.findOne({ where: { id } });
+      console.log(req.user.role); //!! i consolen står den roll du är inloggad med.
       if (!message) {
         throw new MessageNotFound();
       }
-      await message.destroy();
-      res.json({ message: `Message with id ${id} wasted!` });
+      if (req.user.role !== "admin" && req.user.role !== "client") {
+        //?? en till för worker?
+        throw new NotAuthorized();
+      } else {
+        await message.destroy();
+        res.json({
+          message: `Message with id ${id} deleted by ${req.user.role.toUpperCase()}`,
+        });
+      }
     } catch (error) {
       next(error);
     }
   },
 
-  async getClientMessages(req, res, next) {
+  async getMessage(req, res, next) {
+    console.log(req.user.role);
     try {
-      const taskID = req.params;
-      const authorID = req.user.id
-      console.log(taskID)
-      const messages = await Message.findAll({
-        where: { taskID: req.params.taskID },
-      });
-      res.json({ messages });
-    } catch (error) {
-      next(error);
-    }
-  },
+      switch (req.user.role) {
+        case "admin":
+        case "worker":
+          await getWorkerMessages(req, res, next);
+          break;
 
-  async getWorkerMessages(req, res, next) {
-    try {
-      const page = +req.params.page || 0;
-      const taskID = req.params;
-      const authorID = req.user.id;
-      const messages = await Message.findAll({
-        order: [["createdAt", "DESC"]],
-        limit: 5,
-        offset: (page - 1) * 5,
-        where: { taskID: req.params.taskID },
-      });
-      res.json({ messages });
+        case "client":
+          await getClientMessages(req, res, next);
+          break;
+
+        default:
+          console.log("Message Not Found!!");
+      }
     } catch (error) {
-      next(error);
+      console.log(error);
     }
   },
+};
+
+const getClientMessages = async (req, res, next) => {
+  console.log("skurt2");
+  try {
+    const taskID = req.params;
+    const authorID = req.user.id;
+    console.log(taskID);
+    const messages = await Message.findAll({
+      where: { taskID: req.params.taskID },
+    });
+    res.json({ messages });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getWorkerMessages = async (req, res, next) => {
+  console.log("skurt");
+  try {
+    const page = +req.params.page || 0;
+    const taskID = req.params;
+    const authorID = req.user.id;
+    const messages = await Message.findAll({
+      order: [["createdAt", "DESC"]],
+      limit: 5,
+      offset: (page - 1) * 5,
+      where: { taskID: req.params.taskID },
+    });
+    res.json({ messages });
+  } catch (error) {
+    next(error);
+  }
 };

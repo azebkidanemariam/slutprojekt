@@ -14,7 +14,7 @@ module.exports = {
     }
   },
 
-  //can be updated further with password change
+  
   async updateUserProfile(req, res, next) {
     try {
       const id = req.user.id;
@@ -24,10 +24,12 @@ module.exports = {
       if (email) fields.email = email;
 
       const user = await User.findOne({ where: { id } });
-      console.log(user);
+      
 
       await User.update(fields, { where: { id } });
-      res.json({ message: "User info updated" });
+      res.json({
+        message: `User info updated by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -40,10 +42,8 @@ module.exports = {
 
   async getOneUser(req, res, next) {
     const { id } = req.params;
-    // const id = req.body.id
-    console.log(id);
     const user = await User.findOne({ where: { id } });
-    console.log(user);
+    
     if (!user) {
       throw new UserNotFound();
     }
@@ -56,11 +56,16 @@ module.exports = {
       if (!name) {
         throw new InvalidBody(["name"]);
       }
-      const user = await User.findAll({
-        where: { name: name },
-        attributes: { exclude: ["password", "id", "createdAt", "updatedAt"] },
-      });
-      res.json({ user });
+
+      if (req.user.role !== "admin" && req.user.role !== "worker") {
+        throw new NotAuthorized();
+      } else {
+        const user = await User.findAll({
+          where: { name: name },
+          attributes: { exclude: ["password", "id", "createdAt", "updatedAt"] },
+        });
+        res.json({ user });
+      }
     } catch (error) {
       next(error);
     }
@@ -75,7 +80,9 @@ module.exports = {
         throw new InvalidBody(["email", "name", "password", "role"]);
       }
       const user = await User.create({ email, name, password, role });
-      res.json({ message: "User registered" });
+      res.json({
+        message: `User registered succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -95,7 +102,9 @@ module.exports = {
         throw new UserNotFound();
       }
       await User.update(fields, { where: { id } });
-      res.json({ message: "User updated" });
+      res.json({
+        message: `User updated succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -107,13 +116,9 @@ module.exports = {
       const user = await User.findOne({ where: { id } });
 
       await user.destroy();
-      res.json({ message: "Wasted!" });
+      res.json({ message: `User deleted by ${req.user.role.toUpperCase()}` });
     } catch (error) {
       next(error);
     }
   },
-
-
-
-
-}
+};

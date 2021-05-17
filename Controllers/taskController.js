@@ -18,7 +18,9 @@ module.exports = {
         throw new TaskNotFound();
       }
       await task.destroy();
-      res.json({ message: "Task wasted!" });
+      res.json({
+        message: `Task deleted succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -42,7 +44,9 @@ module.exports = {
         workerID,
         clientID: client.id,
       });
-      res.json({ message: "Task registered" });
+      res.json({
+        message: `Task created succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -53,7 +57,7 @@ module.exports = {
       const { id } = req.query;
 
       if (!id) {
-        throw new NotValid(["id"]);
+        throw new TaskNotFound();
       }
 
       const task = await Task.findAll({
@@ -80,7 +84,9 @@ module.exports = {
         throw new TaskNotFound();
       }
       await Task.update(fields, { where: { id } });
-      res.json({ message: "Task updated!" });
+      res.json({
+        message: `Task updated succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
@@ -91,7 +97,7 @@ module.exports = {
     try {
       const page = +req.params.page || 0;
       const clientID = req.user.id;
-      console.log(req.user);
+      
       const task = await Task.findAll({
         limit: 2,
         offset: (page - 1) * 2,
@@ -102,6 +108,7 @@ module.exports = {
       next(error);
     }
   },
+
   async uploadImage(req, res, next) {
     try {
       const id = req.params.id;
@@ -110,18 +117,20 @@ module.exports = {
         throw new TaskNotFound();
       }
       const file = req.files.pic;
-      
+
       const extension = path.extname(file.name);
       const newFileName = uuid() + extension;
       const outputPath = path.join("uploads", newFileName);
       file.mv(outputPath);
-      
+
       if (task.pic) {
         path.join("uploads", task.pic);
       }
       task.pic = newFileName;
       await task.save();
-      res.json({ message: "Picture uploaded succesfully" });
+      res.json({
+        message: `Picture uploaded succesfully by ${req.user.role.toUpperCase()}`,
+      });
     } catch (error) {
       next(error);
     }
