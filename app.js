@@ -7,10 +7,8 @@ require("dotenv").config();
 
 const app = express();
 
-
-app.use( fileUpload());
+app.use(fileUpload());
 app.use(express.json());
-
 
 app.use("/", userRoutes);
 

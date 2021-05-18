@@ -57,7 +57,7 @@ module.exports = {
       const authorID = req.user.id;
 
       const message = await Message.findOne({ where: { id } });
-      console.log(req.user.role); //!! i consolen står den roll du är inloggad med.
+
       if (!message) {
         throw new MessageNotFound();
       }
@@ -76,7 +76,6 @@ module.exports = {
   },
 
   async getMessage(req, res, next) {
-    console.log(req.user.role);
     try {
       switch (req.user.role) {
         case "admin":
@@ -98,11 +97,9 @@ module.exports = {
 };
 
 const getClientMessages = async (req, res, next) => {
-  console.log("skurt2");
   try {
     const taskID = req.params;
     const authorID = req.user.id;
-    console.log(taskID);
     const messages = await Message.findAll({
       where: { taskID: req.params.taskID },
     });
@@ -113,7 +110,6 @@ const getClientMessages = async (req, res, next) => {
 };
 
 const getWorkerMessages = async (req, res, next) => {
-  console.log("skurt");
   try {
     const page = +req.params.page || 0;
     const taskID = req.params;

@@ -15,7 +15,7 @@ module.exports = {
 
       const task = await Task.findByPk(id);
       if (!task) {
-        throw new TaskNotFound();
+        throw new TaskNotFound(id);
       }
       await task.destroy();
       res.json({
@@ -54,15 +54,12 @@ module.exports = {
 
   async getTaskById(req, res, next) {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
 
-      if (!id) {
-        throw new TaskNotFound();
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new TaskNotFound(id);
       }
-
-      const task = await Task.findAll({
-        where: { id: id },
-      });
 
       res.json({ task });
     } catch (error) {
@@ -81,7 +78,7 @@ module.exports = {
 
       const task = await Task.findByPk(id);
       if (!task) {
-        throw new TaskNotFound();
+        throw new TaskNotFound(id);
       }
       await Task.update(fields, { where: { id } });
       res.json({
@@ -97,7 +94,7 @@ module.exports = {
     try {
       const page = +req.params.page || 0;
       const clientID = req.user.id;
-      
+
       const task = await Task.findAll({
         limit: 2,
         offset: (page - 1) * 2,
@@ -114,7 +111,7 @@ module.exports = {
       const id = req.params.id;
       const task = await Task.findByPk(id);
       if (!task) {
-        throw new TaskNotFound();
+        throw new TaskNotFound(id);
       }
       const file = req.files.pic;
 

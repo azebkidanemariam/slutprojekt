@@ -42,9 +42,9 @@ class UserNotFound extends BasicError {
 }
 
 class TaskNotFound extends BasicError {
-  constructor() {
+  constructor(id) {
     super();
-    this.message = `Task not found`;
+    this.message = `Task not found with ${id}`;
     this.errorCode = 404
   }
 }

@@ -14,7 +14,6 @@ module.exports = {
     }
   },
 
-  
   async updateUserProfile(req, res, next) {
     try {
       const id = req.user.id;
@@ -24,7 +23,6 @@ module.exports = {
       if (email) fields.email = email;
 
       const user = await User.findOne({ where: { id } });
-      
 
       await User.update(fields, { where: { id } });
       res.json({
@@ -43,7 +41,7 @@ module.exports = {
   async getOneUser(req, res, next) {
     const { id } = req.params;
     const user = await User.findOne({ where: { id } });
-    
+
     if (!user) {
       throw new UserNotFound();
     }

@@ -6,8 +6,6 @@ const User = require("../Models/userModel");
 const { models } = require("../Database/connection");
 
 const Task = db.define("Task", {
-  
-
   title: {
     type: DataTypes.STRING,
     defaultValue: "Untitled task",
@@ -21,7 +19,6 @@ const Task = db.define("Task", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  
 });
 
 module.exports = Task;
