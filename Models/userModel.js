@@ -69,9 +69,9 @@ User.authenticate = async (email, password) => {
     throw new NotValid();
   }
 };
-User.hasMany(Task, { foreignKey: "clientID" }); //task får foreign keyn: clientID i tabellen
-User.hasMany(Task, { foreignKey: "workerID" }); //task får också en till foreign key som heter workerID i tabellen
-Task.hasMany(Message, { foreignKey: "taskID" }); //message får en taskID som foreign key i tabellen
+User.hasMany(Task, { foreignKey: "clientID" }); 
+User.hasMany(Task, { foreignKey: "workerID" }); 
+Task.hasMany(Message, { foreignKey: "taskID" }); 
 User.hasMany(Message, { foreignKey: "authorID" });
 
 module.exports = User;

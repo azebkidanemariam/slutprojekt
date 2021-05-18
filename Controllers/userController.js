@@ -3,7 +3,7 @@ const User = require("../Models/userModel");
 const Task = require("../Models/taskModel");
 
 module.exports = {
-  //added login
+  
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -69,7 +69,7 @@ module.exports = {
     }
   },
 
-  //Admin endpoints
+ 
 
   async register(req, res, next) {
     try {

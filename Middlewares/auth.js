@@ -1,13 +1,7 @@
 const { NotAuthorized } = require("../Errors");
 const User = require("../Models/userModel");
 
-/*
-Inloggade användare får token via detta middleware. Skicka 
-med token i headers i insomnia vid testning. 
 
-I module.exports får du användaren från req objektet, som du
-kan skicka vidare till userController.  
-*/
 
 function extractToken(headers) {
   const { authorization } = headers;
@@ -51,17 +45,5 @@ module.exports = {
     req.user = user;
     next();
   },
-  // all_users: (req, res, next) => {
-  //   const token = extractToken(req.headers);
-  //   const user = User.validateToken(token);
-  //   if (
-  //     user.role !== "client" &&
-  //     user.role !== "worker" &&
-  //     user.role !== "admin"
-  //   ) {
-  //     throw new NotAuthorized();
-  //   }
-  //   req.user = user;
-  //   next();
-  // },
+  
 };
