@@ -29,28 +29,7 @@ module.exports = {
       next(error);
     }
   },
-  // async createMessage(req, res, next) {
-  //   try {
-  //     const authorID = req.user.id;
-  //     const taskID = req.params.id;
-  //     const task = await Task.findOne({ where: { id: authorID } });
-
-  //     const { title, content } = req.body;
-  //     if (!title || !content) {
-  //       throw new InvalidBody(["title", "content"]);
-  //     }
-  //     const user = await User.findOne({ where: { id: authorID } });
-  //     if (req.user.role !== "worker" || req.user.role !== "client") {
-  //       throw new NotAuthorized();
-  //     }
-  //     await Message.create({ title, content, authorID, taskID });
-  //     res.json({ message: "Message created" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
-
-  //Error handler with string temp lit doesn't work?
+  
   async deleteMessageById(req, res, next) {
     try {
       const { id } = req.params;
@@ -59,10 +38,10 @@ module.exports = {
       const message = await Message.findOne({ where: { id } });
 
       if (!message) {
-        throw new MessageNotFound();
+        throw new MessageNotFound(id);
       }
-      if (req.user.role !== "admin" && req.user.role !== "client") {
-        //?? en till för worker?
+      if (req.user.role !== "admin" && req.user.role !== "client" && req.user.role !== "worker") {
+        
         throw new NotAuthorized();
       } else {
         await message.destroy();

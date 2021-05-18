@@ -34,7 +34,7 @@ class TokenExpired extends BasicError {
 }
 
 class UserNotFound extends BasicError {
-  constructor() {
+  constructor(id) {
     super();
     this.message = `User with id ${id} not found`;
     this.errorCode = 404;
@@ -44,15 +44,15 @@ class UserNotFound extends BasicError {
 class TaskNotFound extends BasicError {
   constructor(id) {
     super();
-    this.message = `Task not found with ${id}`;
+    this.message = `Task with id ${id} not found`;
     this.errorCode = 404
   }
 }
 
 class MessageNotFound extends BasicError {
-  constructor() {
+  constructor(id) {
     super();
-    this.message = `Message not found`;
+    this.message = `Message with id ${id} not found`;
     this.errorCode = 404
   }
 
