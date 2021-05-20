@@ -14,13 +14,19 @@ module.exports = {
     try {
       const authorID = req.user.id;
       const taskID = req.params.id;
-      const task = await Task.findOne({ where: { id: authorID } });
-
-      const { title, content } = req.body;
+      const role = req.user.role;
+      const task = await Task.findOne({where: {id:taskID} });
+     const { title, content } = req.body;
       if (!title || !content) {
         throw new InvalidBody(["title", "content"]);
       }
       const user = await User.findOne({ where: { id: authorID } });
+      if (
+        role === "client" && task.clientID !== authorID ||
+        role === "worker" && task.workerID !== authorID
+      ) {
+        throw new NotAuthorized();
+      }
       await Message.create({ title, content, authorID, taskID });
       res.json({
         message: `Message created succesfully by ${req.user.role.toUpperCase()}`,
@@ -29,7 +35,7 @@ module.exports = {
       next(error);
     }
   },
-  
+
   async deleteMessageById(req, res, next) {
     try {
       const { id } = req.params;
@@ -40,8 +46,11 @@ module.exports = {
       if (!message) {
         throw new MessageNotFound(id);
       }
-      if (req.user.role !== "admin" && req.user.role !== "client" && req.user.role !== "worker") {
-        
+      if (
+        req.user.role !== "admin" &&
+        req.user.role !== "client" &&
+        req.user.role !== "worker"
+      ) {
         throw new NotAuthorized();
       } else {
         await message.destroy();
