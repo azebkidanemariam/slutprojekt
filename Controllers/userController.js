@@ -3,7 +3,6 @@ const User = require("../Models/userModel");
 const Task = require("../Models/taskModel");
 
 module.exports = {
-  
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -69,8 +68,6 @@ module.exports = {
     }
   },
 
- 
-
   async register(req, res, next) {
     try {
       const { email, name, password, role } = req.body;
@@ -115,6 +112,15 @@ module.exports = {
 
       await user.destroy();
       res.json({ message: `User deleted by ${req.user.role.toUpperCase()}` });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getUsers(req, res, next) {
+    try {
+      const users = await User.findAll();
+      res.json({ users });
     } catch (error) {
       next(error);
     }
