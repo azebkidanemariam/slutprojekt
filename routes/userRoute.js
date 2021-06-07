@@ -9,7 +9,8 @@ const Auth = require("../Middlewares/auth");
 router.post("/authenticate", userController.login);
 router.get("/me", Auth.user, userController.me);
 router.patch("/me", Auth.user, userController.updateUserProfile);
-router.get("/users", Auth.user, userController.getUserByName);
+router.get("/users", userController.getUsers);
+router.get("/users/:name", Auth.user, userController.getUserByName);
 router.get("/users/:id", Auth.user, userController.getOneUser);
 //Admin endpoints
 router.post("/users", Auth.admin, userController.register);
@@ -22,7 +23,10 @@ router.post("/tasks", Auth.worker, taskController.createTask);
 router.get("/tasks/:id", Auth.worker, taskController.getTaskById);
 router.post("/tasks/:id/messages", Auth.user, messageController.createMessage);
 router.patch("/tasks/:id", Auth.worker, taskController.updateTaskById);
-router.get("/tasks/:taskID/messages/:page",Auth.user, messageController.getMessage
+router.get(
+  "/tasks/:taskID/messages/:page",
+  Auth.user,
+  messageController.getMessage
 );
 
 //client endpoints
