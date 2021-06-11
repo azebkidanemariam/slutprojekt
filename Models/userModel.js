@@ -64,14 +64,17 @@ User.authenticate = async (email, password) => {
       email: user.email,
       role: user.role,
     }; //Added user role
-    return jwt.sign(payload, process.env.JWT_SECRET);
+    return {
+      token: jwt.sign(payload, process.env.JWT_SECRET),
+      role:user.role
+    };
   } else {
     throw new NotValid();
   }
 };
-User.hasMany(Task, { foreignKey: "clientID" }); 
-User.hasMany(Task, { foreignKey: "workerID" }); 
-Task.hasMany(Message, { foreignKey: "taskID" }); 
+User.hasMany(Task, { foreignKey: "clientID" });
+User.hasMany(Task, { foreignKey: "workerID" });
+Task.hasMany(Message, { foreignKey: "taskID" });
 User.hasMany(Message, { foreignKey: "authorID" });
 
 module.exports = User;

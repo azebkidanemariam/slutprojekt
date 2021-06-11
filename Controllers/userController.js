@@ -4,10 +4,11 @@ const Task = require("../Models/taskModel");
 
 module.exports = {
   async login(req, res, next) {
+    console.log("*** in backend userController - req.body", req.body);
     try {
       const { email, password } = req.body;
-      const token = await User.authenticate(email, password);
-      res.json({ token, email });
+      const { token, role } = await User.authenticate(email, password);
+      res.json({ token, email, role });
     } catch (error) {
       next(error);
     }
