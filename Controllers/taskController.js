@@ -89,23 +89,6 @@ module.exports = {
     }
   },
 
-  //Client
-  async getClientTasks(req, res, next) {
-    try {
-      const page = +req.params.page || 0;
-      const clientID = req.user.id;
-
-      const task = await Task.findAll({
-        limit: 2,
-        offset: (page - 1) * 2,
-        where: { clientID },
-      });
-      res.json({ task });
-    } catch (error) {
-      next(error);
-    }
-  },
-
   async uploadImage(req, res, next) {
     try {
       const id = req.params.id;
@@ -132,4 +115,45 @@ module.exports = {
       next(error);
     }
   },
+  async getTasks(req, res, next) {
+    switch (req.user.role) {
+      case "client":
+        getClientTasks(req, res, next);
+        break;
+      case "worker":
+        getWorkerTasks(req, res, next);
+        break;
+    }
+  },
+};
+const getClientTasks = async (req, res, next) => {
+  try {
+    const page = +req.params.page || 0;
+    const clientID = req.user.id;
+
+    const task = await Task.findAll({
+      limit: 5,
+      offset: (page - 1) * 5,
+      where: { clientID },
+    });
+    res.json({ task });
+  } catch (error) {
+    next(error);
+  }
+};
+//Worker
+const getWorkerTasks = async (req, res, next) => {
+  try {
+    const page = +req.params.page || 0;
+    const workerID = req.user.id;
+
+    const task = await Task.findAll({
+      limit: 5,
+      offset: (page - 1) * 5,
+      where: { workerID },
+    });
+    res.json({ task });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -28,6 +28,11 @@ router.get(
   Auth.user,
   messageController.getMessage
 );
+router.get(
+  "/alltasks/:page",
+  Auth.user,
+  taskController.getTasks
+);
 
 //client endpoints
 router.delete("/messages/:id", Auth.user, messageController.deleteMessageById);
